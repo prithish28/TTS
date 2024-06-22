@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Numbers</title>
+</head>
+<body>
+    <h1>Insert Numbers</h1>
+    <form id="numberForm">
+        <label for="numberInput">Enter a number:</label>
+        <input type="number" id="numberInput" name="numberInput" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="message"></div>
+
+    <script>
+        document.getElementById('numberForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            const number = formData.get('numberInput');
+            
+            try {
+                const response = await fetch('/insert', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ number })
+                });
+                const result = await response.json();
+                document.getElementById('message').textContent = result.message;
+                document.getElementById('numberInput').value = ''; // Clear input field
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
